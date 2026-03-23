@@ -1,13 +1,11 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { TabContext } from '../TabContext/TabContext';
+import { Tabs } from '../Tabs/Tabs';
 
 export const TabsPage: React.FC = () => {
-  const tabs = [
-    { id: 'tab-1', title: 'Tab 1', content: 'Some text 1' },
-    { id: 'tab-2', title: 'Tab 2', content: 'Some text 2' },
-    { id: 'tab-3', title: 'Tab 3', content: 'Some text 3' },
-  ];
-
+  const tabs = useContext(TabContext);
+  const { pathname } = useLocation();
   const { tabId } = useParams();
   const activeTab = tabId ? tabs.find(tab => tab.id === tabId) : undefined;
 
@@ -15,24 +13,12 @@ export const TabsPage: React.FC = () => {
     <div className="section">
       <div className="container">
         <h1 className="title">Tabs page</h1>
-        <div className="tabs is-boxed">
-          <ul>
-            {tabs.map(tab => (
-              <li
-                data-cy="Tab"
-                key={tab.id}
-                className={tab.id === tabId ? 'is-active' : ''}
-              >
-                <Link to={`/tabs/${tab.id}`}>{tab.title}</Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {pathname.startsWith('/tabs') && <Tabs />}
 
-          <div className="block" data-cy="TabContent">
-            {activeTab ? activeTab.content : 'Please select a tab'}
-          </div>
-         </div>
+        <div className="block" data-cy="TabContent">
+          {activeTab ? activeTab.content : 'Please select a tab'}
+        </div>
+      </div>
     </div>
   );
 };
